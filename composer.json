@@ -1,0 +1,51 @@
+{
+    "name": "rushing/php-graphine",
+    "description": "The framework-free graph algebra behind graphine: the GraphStore contract + role sub-contracts + value types + in-memory reference driver + conformance test-kit. Zero illuminate; the Eloquent binding lives in rushing/laravel-graphine.",
+    "keywords": ["graph", "knowledge-graph", "algebra", "substrate", "seam", "driver"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Stephen Rushing",
+            "email": "stephenr85@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.3"
+    },
+    "require-dev": {
+        "laravel/pint": "^1.0",
+        "nikic/php-parser": "^5.0",
+        "pestphp/pest": "^3.0"
+    },
+    "suggest": {
+        "graphp/graph": "MIT — pure-PHP in-memory graph algorithms behind the reference driver (roles 1/2)",
+        "nikic/php-parser": "BSD-3 — AST scanner behind the seam guard a consumer runs over its own App\\Graph\\Drivers"
+    },
+    "autoload": {
+        "psr-4": {
+            "Rushing\\Graphine\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Rushing\\Graphine\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "package-topology": {
+            "mustNotRequire": ["illuminate/*"]
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        },
+        "sort-packages": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "pint": "@php -d memory_limit=512M vendor/bin/pint",
+        "test": "@php vendor/bin/pest"
+    }
+}
