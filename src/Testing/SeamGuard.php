@@ -58,12 +58,20 @@ class SeamGuard
     /** @var list<string> */
     private array $forbidden;
 
+    private bool $importsOnly;
+
     /**
      * @param  list<string>|null  $forbidden  override the boundary list (defaults to FORBIDDEN)
+     * @param  bool  $importsOnly  count only `use` / group-use imports (what binds at parse time), not
+     *                             inline fully-qualified references at call sites. The default (false)
+     *                             is the in-process seam, where a reference is a reference however it is
+     *                             spelled; imports-only is the *parse-time coupling* reading a tier
+     *                             boundary wants when runtime container lookups across it are sanctioned.
      */
-    public function __construct(?array $forbidden = null)
+    public function __construct(?array $forbidden = null, bool $importsOnly = false)
     {
         $this->forbidden = $forbidden ?? self::FORBIDDEN;
+        $this->importsOnly = $importsOnly;
     }
 
     /**
@@ -93,7 +101,7 @@ class SeamGuard
 
     /**
      * Fully-qualified names imported or referenced in a file's AST — `use`
-     * statements, group-uses, and any fully-qualified name reference.
+     * statements, group-uses, and (unless imports-only) any fully-qualified name reference.
      *
      * @return list<string>
      */
@@ -106,10 +114,12 @@ class SeamGuard
 
         $ast = (new ParserFactory)->createForNewestSupportedVersion()->parse($code) ?? [];
 
-        $visitor = new class extends NodeVisitorAbstract
+        $visitor = new class($this->importsOnly) extends NodeVisitorAbstract
         {
             /** @var list<string> */
             public array $names = [];
+
+            public function __construct(private bool $importsOnly) {}
 
             public function enterNode(Node $node): null
             {
@@ -122,7 +132,7 @@ class SeamGuard
                     foreach ($node->uses as $use) {
                         $this->names[] = $prefix.'\\'.$use->name->toString();
                     }
-                } elseif ($node instanceof Node\Name\FullyQualified) {
+                } elseif ($node instanceof Node\Name\FullyQualified && ! $this->importsOnly) {
                     $this->names[] = $node->toString();
                 }
 
