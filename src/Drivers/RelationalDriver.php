@@ -23,8 +23,9 @@ use Rushing\Graphine\Enums\TraversalDirection;
  * differing only in the source they are handed.
  *
  * Each relational consumer used to re-copy exactly this spine-delegation body
- * app-side; the package now lifts it here (taking `illuminate/database` for the
- * source family) so that copy-paste stops.
+ * app-side; the package now lifts it here so that copy-paste stops — framework-free:
+ * `illuminate/database` never enters this zero-dep package; the Laravel-bound relational SOURCES
+ * (the source family) live in rushing/laravel-graphine.
  *
  * Mandatory spine only: StructureStore (role 1) + ComputeStore (role 2). It is
  * deliberately NOT GovernedStore and NOT QueryableStore — a source that governs
