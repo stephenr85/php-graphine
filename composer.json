@@ -15,7 +15,8 @@
     "require-dev": {
         "laravel/pint": "^1.0",
         "nikic/php-parser": "^5.0",
-        "pestphp/pest": "^3.0"
+        "pestphp/pest": "^3.0",
+        "rushing/php-package-topology": "dev-main"
     },
     "suggest": {
         "graphp/graph": "MIT — pure-PHP in-memory graph algorithms behind the reference driver (roles 1/2)",
@@ -42,6 +43,12 @@
         },
         "sort-packages": true
     },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/stephenr85/php-package-topology.git"
+        }
+    ],
     "minimum-stability": "dev",
     "prefer-stable": true,
     "scripts": {
